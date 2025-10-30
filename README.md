@@ -6,7 +6,7 @@ GitQuest is an interactive 8-bit adventure game that teaches Git concepts throug
 
 ## ✨ Created with GitHub Spark
 
-This application was built using [GitHub Spark](https://githubnext.com/projects/github-spark), an AI-powered tool that helps you create micro-apps instantly. GitHub Spark enables rapid development of beautiful, functional web applications through natural language prompts.
+This application was built using [GitHub Spark](https://github.com/features/spark), an AI-powered tool that helps you create micro-apps instantly. GitHub Spark enables rapid development of beautiful, functional web applications through natural language prompts.
 
 ## 🚀 Features
 
@@ -68,12 +68,3 @@ npm run preview
 3. Battle enemies by typing Git commands
 4. Complete all levels to master Git fundamentals!
 
-## 🧹 Just Exploring?
-No problem! If you were just checking things out and don't need to keep this code:
-
-- Simply delete your Spark.
-- Everything will be cleaned up — no traces left behind.
-
-## 📄 License For Spark Template Resources 
-
-The Spark Template files and resources from GitHub are licensed under the terms of the MIT license, Copyright GitHub, Inc.
