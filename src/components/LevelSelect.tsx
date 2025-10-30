@@ -243,19 +243,13 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                 <line x1="550" y1="100" x2="700" y2="100" stroke="var(--secondary)" strokeWidth="4" />
                 <line x1="550" y1="300" x2="700" y2="300" stroke="var(--accent)" strokeWidth="4" />
                 
-                <line x1="700" y1="100" x2="775" y2="150" stroke="var(--secondary)" strokeWidth="4" />
-                <line x1="700" y1="300" x2="775" y2="250" stroke="var(--accent)" strokeWidth="4" />
+                <line x1="700" y1="100" x2="800" y2="100" stroke="var(--secondary)" strokeWidth="4" />
+                <line x1="700" y1="300" x2="800" y2="300" stroke="var(--accent)" strokeWidth="4" />
                 
-                <line x1="775" y1="150" x2="800" y2="175" stroke="var(--primary)" strokeWidth="4" />
-                <line x1="775" y1="250" x2="800" y2="225" stroke="var(--primary)" strokeWidth="4" />
+                <line x1="800" y1="100" x2="800" y2="300" stroke="var(--primary)" strokeWidth="4" />
                 
-                <circle cx="800" cy="175" r="8" fill="var(--primary)" stroke="var(--background)" strokeWidth="2" />
-                <circle cx="800" cy="225" r="8" fill="var(--primary)" stroke="var(--background)" strokeWidth="2" />
-                
-                <line x1="800" y1="175" x2="800" y2="200" stroke="var(--primary)" strokeWidth="4" />
-                <line x1="800" y1="225" x2="800" y2="200" stroke="var(--primary)" strokeWidth="4" />
-                
-                <circle cx="800" cy="200" r="8" fill="var(--primary)" stroke="var(--background)" strokeWidth="2" />
+                <circle cx="800" cy="150" r="8" fill="var(--primary)" stroke="var(--background)" strokeWidth="2" />
+                <circle cx="800" cy="250" r="8" fill="var(--primary)" stroke="var(--background)" strokeWidth="2" />
                 
                 <line x1="800" y1="200" x2="925" y2="200" stroke="var(--primary)" strokeWidth="4" />
                 
