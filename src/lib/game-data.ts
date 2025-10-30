@@ -305,7 +305,7 @@ export const LEVELS: Level[] = [
   },
   {
     id: 5,
-    title: "Branching Out",
+    title: "Time Travel",
     type: "hybrid",
     description: "Create and switch branches",
     tutorial: "Branches let you work on different versions of your code simultaneously. The Branch Warden guards two paths - create a new branch called 'feature' to unlock both routes!",
@@ -400,7 +400,7 @@ export const LEVELS: Level[] = [
   },
   {
     id: 7,
-    title: "Time Travel",
+    title: "Branching Out",
     type: "hybrid",
     description: "Learn to navigate commit history",
     tutorial: "Git lets you travel through time! Three History Keepers guard the timeline. Use history commands to defeat them and collect all commit nodes!",
