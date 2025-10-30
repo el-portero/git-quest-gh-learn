@@ -25,15 +25,32 @@ function App() {
   };
 
   const handleLevelComplete = () => {
-    if (currentLevel && !(completedLevels || []).includes(currentLevel.id)) {
-      setCompletedLevels(prev => [...(prev || []), currentLevel.id]);
+    if (!currentLevel) return;
+
+    const updatedCompletedLevels = (completedLevels || []).includes(currentLevel.id)
+      ? completedLevels || []
+      : [...(completedLevels || []), currentLevel.id];
+
+    if (!(completedLevels || []).includes(currentLevel.id)) {
+      setCompletedLevels(updatedCompletedLevels);
     }
 
-    const nextLevel = LEVELS.find(level => level.id === currentLevelId + 1);
-    if (nextLevel) {
-      setCurrentLevelId(nextLevel.id);
+    if (currentLevel.id === 4 || currentLevel.id === 5) {
+      const otherBranchLevel = currentLevel.id === 4 ? 5 : 4;
+      const isOtherBranchComplete = updatedCompletedLevels.includes(otherBranchLevel);
+      
+      if (isOtherBranchComplete) {
+        setCurrentLevelId(6);
+      } else {
+        setCurrentLevelId(otherBranchLevel);
+      }
     } else {
-      setGameState('menu');
+      const nextLevel = LEVELS.find(level => level.id === currentLevelId + 1);
+      if (nextLevel) {
+        setCurrentLevelId(nextLevel.id);
+      } else {
+        setGameState('menu');
+      }
     }
   };
 
