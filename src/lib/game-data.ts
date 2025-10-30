@@ -312,7 +312,7 @@ export const LEVELS: Level[] = [
     mapSize: { width: 14, height: 10 },
     startPosition: { x: 7, y: 8 },
     gitConcept: "Git Branches",
-    branchInfo: { branch: 'main', prerequisite: [3] },
+    branchInfo: { branch: 'main', prerequisite: [4, 7] },
     objectives: [
       {
         type: "defeat-enemy",
@@ -361,7 +361,7 @@ export const LEVELS: Level[] = [
     mapSize: { width: 12, height: 10 },
     startPosition: { x: 1, y: 8 },
     gitConcept: "Merging Branches",
-    branchInfo: { branch: 'main', prerequisite: [4, 5] },
+    branchInfo: { branch: 'main', prerequisite: [5] },
     objectives: [
       {
         type: "reach",

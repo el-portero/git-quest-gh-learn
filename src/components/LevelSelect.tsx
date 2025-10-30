@@ -230,25 +230,23 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                 transformOrigin: 'center center',
               }}
             >
-              <svg className="w-full" viewBox="0 0 1600 400" preserveAspectRatio="xMidYMid meet">
+              <svg className="w-full" viewBox="0 0 1800 400" preserveAspectRatio="xMidYMid meet">
                 <line x1="100" y1="200" x2="200" y2="200" stroke="var(--primary)" strokeWidth="4" />
                 <line x1="200" y1="200" x2="300" y2="200" stroke="var(--primary)" strokeWidth="4" />
                 <line x1="300" y1="200" x2="400" y2="200" stroke="var(--primary)" strokeWidth="4" />
                 
                 <line x1="400" y1="200" x2="550" y2="100" stroke="var(--secondary)" strokeWidth="4" />
-                <line x1="400" y1="200" x2="550" y2="200" stroke="var(--primary)" strokeWidth="4" />
                 <line x1="400" y1="200" x2="550" y2="300" stroke="var(--accent)" strokeWidth="4" />
                 
                 <line x1="550" y1="100" x2="700" y2="100" stroke="var(--secondary)" strokeWidth="4" />
-                <line x1="550" y1="200" x2="700" y2="200" stroke="var(--primary)" strokeWidth="4" />
                 <line x1="550" y1="300" x2="700" y2="300" stroke="var(--accent)" strokeWidth="4" />
                 
                 <line x1="700" y1="100" x2="850" y2="200" stroke="var(--secondary)" strokeWidth="4" />
-                <line x1="700" y1="200" x2="850" y2="200" stroke="var(--primary)" strokeWidth="4" />
                 <line x1="700" y1="300" x2="850" y2="200" stroke="var(--accent)" strokeWidth="4" />
                 
                 <line x1="850" y1="200" x2="950" y2="200" stroke="var(--primary)" strokeWidth="4" />
                 <line x1="950" y1="200" x2="1050" y2="200" stroke="var(--primary)" strokeWidth="4" />
+                <line x1="1050" y1="200" x2="1150" y2="200" stroke="var(--primary)" strokeWidth="4" />
                 
                 <g transform="translate(100, 200)">
                   <foreignObject x="-40" y="-40" width="80" height="80">
@@ -275,42 +273,30 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                 </g>
                 
                 <g transform="translate(400, 200)">
-                  <foreignObject x="-32" y="-32" width="64" height="64">
-                    <div className="flex items-center justify-center w-full h-full">
-                      {renderLevelNode(mainBranch[3], true)}
-                    </div>
-                  </foreignObject>
-                  <text x="0" y="55" textAnchor="middle" fill="var(--primary)" fontSize="12" fontFamily="Press Start 2P">main</text>
+                  <circle cx="0" cy="0" r="8" fill="var(--primary)" />
+                  <text x="0" y="35" textAnchor="middle" fill="var(--primary)" fontSize="10" fontFamily="Press Start 2P">split</text>
                 </g>
                 
                 <g transform="translate(550, 100)">
-                  <foreignObject x="-32" y="-32" width="64" height="64">
+                  <foreignObject x="-40" y="-40" width="80" height="80">
                     <div className="flex items-center justify-center w-full h-full">
-                      {renderLevelNode(featureBranch[0], true)}
+                      {renderLevelNode(featureBranch[0])}
                     </div>
                   </foreignObject>
-                  <text x="0" y="-45" textAnchor="middle" fill="var(--secondary)" fontSize="12" fontFamily="Press Start 2P">feature</text>
-                </g>
-                
-                <g transform="translate(550, 200)">
-                  <circle cx="0" cy="0" r="8" fill="var(--primary)" />
+                  <text x="0" y="-55" textAnchor="middle" fill="var(--secondary)" fontSize="12" fontFamily="Press Start 2P">feature</text>
                 </g>
                 
                 <g transform="translate(550, 300)">
-                  <foreignObject x="-32" y="-32" width="64" height="64">
+                  <foreignObject x="-40" y="-40" width="80" height="80">
                     <div className="flex items-center justify-center w-full h-full">
-                      {renderLevelNode(experimentalBranch[0], true)}
+                      {renderLevelNode(experimentalBranch[0])}
                     </div>
                   </foreignObject>
-                  <text x="0" y="55" textAnchor="middle" fill="var(--accent)" fontSize="12" fontFamily="Press Start 2P">experimental</text>
+                  <text x="0" y="65" textAnchor="middle" fill="var(--accent)" fontSize="12" fontFamily="Press Start 2P">experimental</text>
                 </g>
                 
                 <g transform="translate(700, 100)">
                   <circle cx="0" cy="0" r="8" fill="var(--secondary)" />
-                </g>
-                
-                <g transform="translate(700, 200)">
-                  <circle cx="0" cy="0" r="8" fill="var(--primary)" />
                 </g>
                 
                 <g transform="translate(700, 300)">
@@ -320,12 +306,21 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                 <g transform="translate(850, 200)">
                   <foreignObject x="-40" y="-40" width="80" height="80">
                     <div className="flex items-center justify-center w-full h-full">
+                      {renderLevelNode(mainBranch[3])}
+                    </div>
+                  </foreignObject>
+                  <text x="0" y="65" textAnchor="middle" fill="var(--primary)" fontSize="10" fontFamily="Press Start 2P">merge</text>
+                </g>
+                
+                <g transform="translate(950, 200)">
+                  <foreignObject x="-40" y="-40" width="80" height="80">
+                    <div className="flex items-center justify-center w-full h-full">
                       {renderLevelNode(mainBranch[4])}
                     </div>
                   </foreignObject>
                 </g>
                 
-                <g transform="translate(950, 200)">
+                <g transform="translate(1050, 200)">
                   <foreignObject x="-40" y="-40" width="80" height="80">
                     <div className="flex items-center justify-center w-full h-full">
                       {renderLevelNode(mainBranch[5])}
