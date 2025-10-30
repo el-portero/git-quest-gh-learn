@@ -98,6 +98,7 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
       }
       
       setCurrentEnemy(null);
+      setPlayerPosition({ ...playerPosition });
     }
   };
 
