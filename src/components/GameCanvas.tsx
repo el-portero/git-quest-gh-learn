@@ -72,7 +72,7 @@ export function GameCanvas({
       setPlayerPosition({ x: newX, y: newY });
 
       level.objectives.forEach((obj, index) => {
-        if (obj.type === 'reach' && obj.target && obj.target.x === newX && obj.target.y === newY && !obj.completed) {
+        if ((obj.type === 'reach' || obj.type === 'learn') && obj.target && obj.target.x === newX && obj.target.y === newY && !obj.completed) {
           onObjectiveComplete(index);
         }
       });
@@ -128,7 +128,7 @@ export function GameCanvas({
     }
 
     level.objectives.forEach((obj) => {
-      if (obj.type === 'reach' && obj.target) {
+      if ((obj.type === 'reach' || obj.type === 'learn') && obj.target) {
         const { x, y } = obj.target;
         ctx.fillStyle = obj.completed ? getTileColor('grass') : getTileColor('goal');
         ctx.fillRect(x * TILE_SIZE + 8, y * TILE_SIZE + 8, TILE_SIZE - 16, TILE_SIZE - 16);

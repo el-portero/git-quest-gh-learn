@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Level, Position, Enemy } from '@/lib/game-data';
+import { Level, Position, Enemy, LevelObjective } from '@/lib/game-data';
 import { GameCanvas } from './GameCanvas';
 import { EnemyBattle } from './EnemyBattle';
+import { GitLearnDialog } from './GitLearnDialog';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
@@ -22,6 +23,7 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
   const [showCompletion, setShowCompletion] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [currentEnemy, setCurrentEnemy] = useState<Enemy | null>(null);
+  const [learnObjective, setLearnObjective] = useState<LevelObjective | null>(null);
 
   useEffect(() => {
     setPlayerPosition(level.startPosition);
@@ -29,6 +31,7 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
     setShowTutorial(true);
     setShowCompletion(false);
     setCurrentEnemy(null);
+    setLearnObjective(null);
   }, [level]);
 
   useEffect(() => {
@@ -45,9 +48,14 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
       const newObjectives = [...prev];
       if (!newObjectives[index].completed) {
         newObjectives[index].completed = true;
-        toast.success('Objective Complete!', {
-          description: newObjectives[index].description,
-        });
+        
+        if (newObjectives[index].type === 'learn') {
+          setLearnObjective(newObjectives[index]);
+        } else {
+          toast.success('Objective Complete!', {
+            description: newObjectives[index].description,
+          });
+        }
       }
       return newObjectives;
     });
@@ -79,6 +87,15 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
 
   const handleEnemyFlee = () => {
     setCurrentEnemy(null);
+  };
+
+  const handleLearnClose = () => {
+    if (learnObjective) {
+      toast.success('Objective Complete!', {
+        description: learnObjective.description,
+      });
+    }
+    setLearnObjective(null);
   };
 
   const completedCount = objectives.filter(obj => obj.completed).length;
@@ -159,7 +176,7 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
                     }`}
                   >
                     <span className="text-xl mt-0.5">
-                      {obj.completed ? '✓' : obj.type === 'reach' ? '📍' : '⌨️'}
+                      {obj.completed ? '✓' : obj.type === 'reach' ? '📍' : obj.type === 'learn' ? '📚' : '⌨️'}
                     </span>
                     <div className="flex-1">
                       <p className={`text-sm ${obj.completed ? 'line-through text-muted-foreground' : ''}`}>
@@ -258,6 +275,17 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
           </Button>
         </DialogContent>
       </Dialog>
+
+      {learnObjective?.learnContent && (
+        <GitLearnDialog
+          open={!!learnObjective}
+          onClose={handleLearnClose}
+          title={learnObjective.learnContent.title}
+          concept={learnObjective.learnContent.concept}
+          content={learnObjective.learnContent.content}
+          examples={learnObjective.learnContent.examples}
+        />
+      )}
     </div>
   );
 }

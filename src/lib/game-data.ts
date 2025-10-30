@@ -19,12 +19,18 @@ export interface Enemy {
 }
 
 export interface LevelObjective {
-  type: 'reach' | 'defeat-enemy' | 'collect';
+  type: 'reach' | 'defeat-enemy' | 'collect' | 'learn';
   description: string;
   target?: Position;
   enemyId?: string;
   itemLabel?: string;
   completed: boolean;
+  learnContent?: {
+    title: string;
+    concept: string;
+    content: string;
+    examples?: string[];
+  };
 }
 
 export interface Level {
@@ -64,10 +70,20 @@ export const LEVELS: Level[] = [
         completed: false
       },
       {
-        type: "reach",
-        description: "Reach the repository marker",
+        type: "learn",
+        description: "Learn about Git repositories",
         target: { x: 8, y: 4 },
-        completed: false
+        completed: false,
+        learnContent: {
+          title: "What is a Git Repository?",
+          concept: "Git Repository Basics",
+          content: "A Git repository (or 'repo') is like a magic chest that stores all your code and its entire history. When you run 'git init', you create a hidden .git folder that tracks every change you make.\n\nThink of it as a time machine for your code - you can travel back to any previous version, see what changed, and even explore alternate timelines (branches)!",
+          examples: [
+            "git init                    # Initialize a new repository",
+            "git init my-project         # Create a new directory with a repo",
+            "ls -la                      # See the hidden .git folder"
+          ]
+        }
       }
     ],
     obstacles: [
@@ -179,10 +195,20 @@ export const LEVELS: Level[] = [
         completed: false
       },
       {
-        type: "reach",
-        description: "Reach the commit node",
+        type: "learn",
+        description: "Learn about commits and commit messages",
         target: { x: 8, y: 4 },
-        completed: false
+        completed: false,
+        learnContent: {
+          title: "Understanding Commits",
+          concept: "Git Commits & Messages",
+          content: "A commit is a snapshot of your code at a specific point in time. It's like taking a photo of your entire project!\n\nCommit messages are crucial - they tell your future self (and your team) what changed and why. Good commit messages make it easy to understand your project's history.\n\nBest practices:\n• Use present tense ('Add feature' not 'Added feature')\n• Be concise but descriptive\n• Explain the 'why', not just the 'what'",
+          examples: [
+            'git commit -m "Add user login feature"',
+            'git commit -m "Fix navigation bug on mobile"',
+            'git commit -m "Update documentation for API endpoints"'
+          ]
+        }
       }
     ],
     obstacles: [
