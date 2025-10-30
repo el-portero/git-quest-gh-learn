@@ -246,6 +246,9 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                 <line x1="700" y1="100" x2="800" y2="200" stroke="var(--secondary)" strokeWidth="4" />
                 <line x1="700" y1="300" x2="800" y2="200" stroke="var(--accent)" strokeWidth="4" />
                 
+                <circle cx="800" cy="200" r="8" fill="var(--primary)" />
+                <circle cx="800" cy="200" r="8" fill="var(--primary)" />
+                
                 <line x1="800" y1="200" x2="925" y2="200" stroke="var(--primary)" strokeWidth="4" />
                 
                 <line x1="925" y1="200" x2="1025" y2="200" stroke="var(--primary)" strokeWidth="4" />
