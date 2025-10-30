@@ -24,6 +24,7 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
   const [showHint, setShowHint] = useState(false);
   const [currentEnemy, setCurrentEnemy] = useState<Enemy | null>(null);
   const [learnObjective, setLearnObjective] = useState<LevelObjective | null>(null);
+  const [objectivesCompleted, setObjectivesCompleted] = useState(false);
 
   useEffect(() => {
     setPlayerPosition(level.startPosition);
@@ -32,16 +33,31 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
     setShowCompletion(false);
     setCurrentEnemy(null);
     setLearnObjective(null);
+    setObjectivesCompleted(false);
   }, [level]);
 
   useEffect(() => {
     const allCompleted = objectives.every(obj => obj.completed);
-    if (allCompleted && objectives.length > 0) {
+    if (allCompleted && objectives.length > 0 && !objectivesCompleted) {
+      setObjectivesCompleted(true);
+      
+      const anyPopupOpen = showHint || currentEnemy || learnObjective;
+      if (anyPopupOpen) {
+        toast.info('All objectives complete! 🎉', {
+          description: 'Close all open dialogs to proceed to the next level.',
+        });
+      }
+    }
+  }, [objectives, objectivesCompleted, showHint, currentEnemy, learnObjective]);
+
+  useEffect(() => {
+    const noPopupsOpen = !showTutorial && !showHint && !currentEnemy && !learnObjective;
+    if (objectivesCompleted && noPopupsOpen && !showCompletion) {
       setTimeout(() => {
         setShowCompletion(true);
       }, 500);
     }
-  }, [objectives]);
+  }, [objectivesCompleted, showTutorial, showHint, currentEnemy, learnObjective, showCompletion]);
 
   const handleObjectiveComplete = (index: number) => {
     setObjectives(prev => {
