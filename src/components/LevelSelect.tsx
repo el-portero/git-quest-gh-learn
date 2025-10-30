@@ -1,6 +1,7 @@
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Lock, CheckCircle, Play, Trash, GitBranch } from '@phosphor-icons/react';
+import { Lock, CheckCircle, Play, Trash, GitBranch, MagnifyingGlassMinus, MagnifyingGlassPlus, ArrowsOut } from '@phosphor-icons/react';
 import { LEVELS } from '@/lib/game-data';
 import {
   AlertDialog,
@@ -28,6 +29,12 @@ interface LevelSelectProps {
 }
 
 export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onResetProgress }: LevelSelectProps) {
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const isLevelUnlocked = (levelId: number) => {
     const level = LEVELS.find(l => l.id === levelId);
     if (!level || !level.branchInfo || !level.branchInfo.prerequisite) return false;
@@ -64,6 +71,49 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
   const mainBranch = LEVELS.filter(l => l.branchInfo?.branch === 'main');
   const featureBranch = LEVELS.filter(l => l.branchInfo?.branch === 'feature');
   const experimentalBranch = LEVELS.filter(l => l.branchInfo?.branch === 'experimental');
+
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    setZoom(prev => Math.min(Math.max(prev * delta, 0.5), 3));
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('button')) return;
+    setIsDragging(true);
+    setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    setPan({
+      x: e.clientX - dragStart.x,
+      y: e.clientY - dragStart.y,
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleZoomIn = () => {
+    setZoom(prev => Math.min(prev * 1.2, 3));
+  };
+
+  const handleZoomOut = () => {
+    setZoom(prev => Math.max(prev / 1.2, 0.5));
+  };
+
+  const handleResetView = () => {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  };
+
+  useEffect(() => {
+    const handleGlobalMouseUp = () => setIsDragging(false);
+    window.addEventListener('mouseup', handleGlobalMouseUp);
+    return () => window.removeEventListener('mouseup', handleGlobalMouseUp);
+  }, []);
 
   const renderLevelNode = (level: typeof LEVELS[0], isCompact = false) => {
     const unlocked = isLevelUnlocked(level.id);
@@ -139,7 +189,7 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
 
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 md:p-8 overflow-x-auto">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 md:p-8">
         <div className="w-full max-w-7xl space-y-8">
         <div className="text-center space-y-4">
           <h1 className="text-3xl md:text-5xl text-primary pixel-font leading-relaxed">
@@ -163,67 +213,173 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-8 min-w-max px-4">
-          <div className="flex items-center gap-6 text-sm">
-            <div className="flex items-center gap-2">
-              <GitBranch size={20} className="text-primary" weight="bold" />
-              <span className="pixel-font text-primary">main</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <GitBranch size={20} className="text-secondary" weight="bold" />
-              <span className="pixel-font text-secondary">feature</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <GitBranch size={20} className="text-accent" weight="bold" />
-              <span className="pixel-font text-accent">experimental</span>
+        <div className="relative bg-card pixel-border overflow-hidden" style={{ height: '400px' }}>
+          <div
+            ref={containerRef}
+            className={`w-full h-full overflow-hidden ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+            onWheel={handleWheel}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
+            <div
+              className="relative transition-transform duration-100"
+              style={{
+                transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+                transformOrigin: 'center center',
+              }}
+            >
+              <svg className="w-full" viewBox="0 0 1600 400" preserveAspectRatio="xMidYMid meet">
+                <line x1="100" y1="200" x2="200" y2="200" stroke="var(--primary)" strokeWidth="4" />
+                <line x1="200" y1="200" x2="300" y2="200" stroke="var(--primary)" strokeWidth="4" />
+                <line x1="300" y1="200" x2="400" y2="200" stroke="var(--primary)" strokeWidth="4" />
+                
+                <line x1="400" y1="200" x2="550" y2="100" stroke="var(--secondary)" strokeWidth="4" />
+                <line x1="400" y1="200" x2="550" y2="200" stroke="var(--primary)" strokeWidth="4" />
+                <line x1="400" y1="200" x2="550" y2="300" stroke="var(--accent)" strokeWidth="4" />
+                
+                <line x1="550" y1="100" x2="700" y2="100" stroke="var(--secondary)" strokeWidth="4" />
+                <line x1="550" y1="200" x2="700" y2="200" stroke="var(--primary)" strokeWidth="4" />
+                <line x1="550" y1="300" x2="700" y2="300" stroke="var(--accent)" strokeWidth="4" />
+                
+                <line x1="700" y1="100" x2="850" y2="200" stroke="var(--secondary)" strokeWidth="4" />
+                <line x1="700" y1="200" x2="850" y2="200" stroke="var(--primary)" strokeWidth="4" />
+                <line x1="700" y1="300" x2="850" y2="200" stroke="var(--accent)" strokeWidth="4" />
+                
+                <line x1="850" y1="200" x2="950" y2="200" stroke="var(--primary)" strokeWidth="4" />
+                <line x1="950" y1="200" x2="1050" y2="200" stroke="var(--primary)" strokeWidth="4" />
+                
+                <g transform="translate(100, 200)">
+                  <foreignObject x="-40" y="-40" width="80" height="80">
+                    <div className="flex items-center justify-center w-full h-full">
+                      {renderLevelNode(mainBranch[0])}
+                    </div>
+                  </foreignObject>
+                </g>
+                
+                <g transform="translate(200, 200)">
+                  <foreignObject x="-40" y="-40" width="80" height="80">
+                    <div className="flex items-center justify-center w-full h-full">
+                      {renderLevelNode(mainBranch[1])}
+                    </div>
+                  </foreignObject>
+                </g>
+                
+                <g transform="translate(300, 200)">
+                  <foreignObject x="-40" y="-40" width="80" height="80">
+                    <div className="flex items-center justify-center w-full h-full">
+                      {renderLevelNode(mainBranch[2])}
+                    </div>
+                  </foreignObject>
+                </g>
+                
+                <g transform="translate(400, 200)">
+                  <foreignObject x="-32" y="-32" width="64" height="64">
+                    <div className="flex items-center justify-center w-full h-full">
+                      {renderLevelNode(mainBranch[3], true)}
+                    </div>
+                  </foreignObject>
+                  <text x="0" y="55" textAnchor="middle" fill="var(--primary)" fontSize="12" fontFamily="Press Start 2P">main</text>
+                </g>
+                
+                <g transform="translate(550, 100)">
+                  <foreignObject x="-32" y="-32" width="64" height="64">
+                    <div className="flex items-center justify-center w-full h-full">
+                      {renderLevelNode(featureBranch[0], true)}
+                    </div>
+                  </foreignObject>
+                  <text x="0" y="-45" textAnchor="middle" fill="var(--secondary)" fontSize="12" fontFamily="Press Start 2P">feature</text>
+                </g>
+                
+                <g transform="translate(550, 200)">
+                  <circle cx="0" cy="0" r="8" fill="var(--primary)" />
+                </g>
+                
+                <g transform="translate(550, 300)">
+                  <foreignObject x="-32" y="-32" width="64" height="64">
+                    <div className="flex items-center justify-center w-full h-full">
+                      {renderLevelNode(experimentalBranch[0], true)}
+                    </div>
+                  </foreignObject>
+                  <text x="0" y="55" textAnchor="middle" fill="var(--accent)" fontSize="12" fontFamily="Press Start 2P">experimental</text>
+                </g>
+                
+                <g transform="translate(700, 100)">
+                  <circle cx="0" cy="0" r="8" fill="var(--secondary)" />
+                </g>
+                
+                <g transform="translate(700, 200)">
+                  <circle cx="0" cy="0" r="8" fill="var(--primary)" />
+                </g>
+                
+                <g transform="translate(700, 300)">
+                  <circle cx="0" cy="0" r="8" fill="var(--accent)" />
+                </g>
+                
+                <g transform="translate(850, 200)">
+                  <foreignObject x="-40" y="-40" width="80" height="80">
+                    <div className="flex items-center justify-center w-full h-full">
+                      {renderLevelNode(mainBranch[4])}
+                    </div>
+                  </foreignObject>
+                </g>
+                
+                <g transform="translate(950, 200)">
+                  <foreignObject x="-40" y="-40" width="80" height="80">
+                    <div className="flex items-center justify-center w-full h-full">
+                      {renderLevelNode(mainBranch[5])}
+                    </div>
+                  </foreignObject>
+                </g>
+              </svg>
             </div>
           </div>
 
-          <div className="relative flex justify-center items-start">
-            <div className="flex flex-col items-center gap-2">
-              {renderLevelNode(mainBranch[0])}
-              <div className="h-12 w-1 bg-primary" />
-              {renderLevelNode(mainBranch[1])}
-              <div className="h-12 w-1 bg-primary" />
-              {renderLevelNode(mainBranch[2])}
-              
-              <div className="relative h-40 w-full flex items-center justify-center">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center">
-                  <div className="h-8 w-1 bg-primary" />
-                  
-                  <svg className="w-[600px] h-24" viewBox="0 0 600 100">
-                    <line x1="300" y1="0" x2="150" y2="50" stroke="var(--secondary)" strokeWidth="3" />
-                    <line x1="300" y1="0" x2="450" y2="50" stroke="var(--accent)" strokeWidth="3" />
-                    <line x1="150" y1="50" x2="300" y2="100" stroke="var(--secondary)" strokeWidth="3" />
-                    <line x1="300" y1="50" x2="300" y2="100" stroke="var(--primary)" strokeWidth="3" />
-                    <line x1="450" y1="50" x2="300" y2="100" stroke="var(--accent)" strokeWidth="3" />
-                  </svg>
-                  
-                  <div className="h-8 w-1 bg-primary" />
-                </div>
-                
-                <div className="absolute top-12 w-full flex justify-center items-center gap-24">
-                  <div className="flex items-center gap-2">
-                    {renderLevelNode(featureBranch[0], true)}
-                    <Badge variant="secondary" className="text-xs pixel-font">feature</Badge>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    {renderLevelNode(mainBranch[3], true)}
-                    <Badge className="text-xs pixel-font">main</Badge>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs pixel-font text-accent border-accent">experimental</Badge>
-                    {renderLevelNode(experimentalBranch[0], true)}
-                  </div>
-                </div>
-              </div>
-              
-              {renderLevelNode(mainBranch[4])}
-              <div className="h-12 w-1 bg-primary" />
-              {renderLevelNode(mainBranch[5])}
+          <div className="absolute top-4 right-4 flex flex-col gap-2">
+            <Button
+              size="icon"
+              variant="secondary"
+              className="pixel-shadow w-10 h-10"
+              onClick={handleZoomIn}
+            >
+              <MagnifyingGlassPlus size={20} weight="bold" />
+            </Button>
+            <Button
+              size="icon"
+              variant="secondary"
+              className="pixel-shadow w-10 h-10"
+              onClick={handleZoomOut}
+            >
+              <MagnifyingGlassMinus size={20} weight="bold" />
+            </Button>
+            <Button
+              size="icon"
+              variant="secondary"
+              className="pixel-shadow w-10 h-10"
+              onClick={handleResetView}
+            >
+              <ArrowsOut size={20} weight="bold" />
+            </Button>
+          </div>
+
+          <div className="absolute bottom-4 left-4 flex items-center gap-6 bg-card/80 backdrop-blur-sm px-4 py-2 pixel-border">
+            <div className="flex items-center gap-2">
+              <GitBranch size={16} className="text-primary" weight="bold" />
+              <span className="text-xs pixel-font text-primary">main</span>
             </div>
+            <div className="flex items-center gap-2">
+              <GitBranch size={16} className="text-secondary" weight="bold" />
+              <span className="text-xs pixel-font text-secondary">feature</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <GitBranch size={16} className="text-accent" weight="bold" />
+              <span className="text-xs pixel-font text-accent">experimental</span>
+            </div>
+          </div>
+
+          <div className="absolute bottom-4 right-4 text-xs text-muted-foreground bg-card/80 backdrop-blur-sm px-3 py-1 pixel-border">
+            {Math.round(zoom * 100)}%
           </div>
         </div>
 
