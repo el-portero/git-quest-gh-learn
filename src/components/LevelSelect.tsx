@@ -37,9 +37,9 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
 
   const isLevelUnlocked = (levelId: number) => {
     const level = LEVELS.find(l => l.id === levelId);
-    if (!level || !level.branchInfo || !level.branchInfo.prerequisite) return false;
+    if (!level || !level.branchInfo) return false;
     
-    if (level.branchInfo.prerequisite.length === 0) return true;
+    if (!level.branchInfo.prerequisite || level.branchInfo.prerequisite.length === 0) return true;
     
     return level.branchInfo.prerequisite.every(prereqId => 
       completedLevels.includes(prereqId)
@@ -115,7 +115,9 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
     return () => window.removeEventListener('mouseup', handleGlobalMouseUp);
   }, []);
 
-  const renderLevelNode = (level: typeof LEVELS[0], isCompact = false) => {
+  const renderLevelNode = (level: typeof LEVELS[0] | undefined, isCompact = false) => {
+    if (!level) return null;
+    
     const unlocked = isLevelUnlocked(level.id);
     const completed = isLevelCompleted(level.id);
     const branch = level.branchInfo?.branch || 'main';
