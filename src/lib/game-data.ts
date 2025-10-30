@@ -305,101 +305,6 @@ export const LEVELS: Level[] = [
   },
   {
     id: 5,
-    title: "Time Travel",
-    type: "hybrid",
-    description: "Create and switch branches",
-    tutorial: "Branches let you work on different versions of your code simultaneously. The Branch Warden guards two paths - create a new branch called 'feature' to unlock both routes!",
-    mapSize: { width: 14, height: 10 },
-    startPosition: { x: 7, y: 8 },
-    gitConcept: "Git Branches",
-    branchInfo: { branch: 'main', prerequisite: [4, 7] },
-    objectives: [
-      {
-        type: "defeat-enemy",
-        description: "Create a feature branch to defeat the Branch Warden",
-        enemyId: "branch-warden",
-        completed: false
-      },
-      {
-        type: "reach",
-        description: "Explore the feature branch path",
-        target: { x: 3, y: 2 },
-        completed: false
-      },
-      {
-        type: "reach",
-        description: "Return to the main branch path",
-        target: { x: 11, y: 2 },
-        completed: false
-      }
-    ],
-    obstacles: [
-      { x: 7, y: 4 }
-    ],
-    enemies: [
-      {
-        id: "branch-warden",
-        position: { x: 7, y: 6 },
-        name: "Branch Warden",
-        description: "Guards the branching paths - create a branch to pass!",
-        health: 1,
-        maxHealth: 1,
-        defeated: false,
-        correctCommands: ["git branch feature", "git checkout -b feature", "git switch -c feature"],
-        hint: "Use 'git branch feature' or 'git checkout -b feature' to create a new branch",
-        blockMessage: "The Branch Warden blocks both paths! Create a 'feature' branch to proceed."
-      }
-    ],
-    collectibles: []
-  },
-  {
-    id: 6,
-    title: "Merging Paths",
-    type: "hybrid",
-    description: "Merge branches together",
-    tutorial: "Merging combines changes from different branches. The Merge Guardian stands at the convergence point. Navigate through the maze and merge the feature branch to defeat it!",
-    mapSize: { width: 12, height: 10 },
-    startPosition: { x: 1, y: 8 },
-    gitConcept: "Merging Branches",
-    branchInfo: { branch: 'main', prerequisite: [5] },
-    objectives: [
-      {
-        type: "reach",
-        description: "Navigate through the branch maze",
-        target: { x: 10, y: 5 },
-        completed: false
-      },
-      {
-        type: "defeat-enemy",
-        description: "Merge the feature branch to defeat the Merge Guardian",
-        enemyId: "merge-guardian",
-        completed: false
-      }
-    ],
-    obstacles: [
-      { x: 3, y: 7 }, { x: 3, y: 6 }, { x: 3, y: 5 },
-      { x: 5, y: 7 }, { x: 5, y: 4 }, { x: 5, y: 3 },
-      { x: 7, y: 6 }, { x: 7, y: 5 }, { x: 7, y: 4 },
-      { x: 9, y: 7 }, { x: 9, y: 3 }
-    ],
-    enemies: [
-      {
-        id: "merge-guardian",
-        position: { x: 10, y: 2 },
-        name: "Merge Guardian",
-        description: "Guards the merge point - merge the branches to pass!",
-        health: 1,
-        maxHealth: 1,
-        defeated: false,
-        correctCommands: ["git merge feature"],
-        hint: "Use 'git merge feature' to merge the feature branch",
-        blockMessage: "The Merge Guardian blocks the final path! Merge the feature branch to proceed."
-      }
-    ],
-    collectibles: []
-  },
-  {
-    id: 7,
     title: "Branching Out",
     type: "hybrid",
     description: "Learn to navigate commit history",
@@ -463,6 +368,101 @@ export const LEVELS: Level[] = [
       { position: { x: 8, y: 4 }, label: "C2", collected: false },
       { position: { x: 9, y: 4 }, label: "C3", collected: false }
     ]
+  },
+  {
+    id: 6,
+    title: "Merging Paths",
+    type: "hybrid",
+    description: "Merge branches together",
+    tutorial: "Merging combines changes from different branches. The Merge Guardian stands at the convergence point. Navigate through the maze and merge the feature branch to defeat it!",
+    mapSize: { width: 12, height: 10 },
+    startPosition: { x: 1, y: 8 },
+    gitConcept: "Merging Branches",
+    branchInfo: { branch: 'main', prerequisite: [4, 5] },
+    objectives: [
+      {
+        type: "reach",
+        description: "Navigate through the branch maze",
+        target: { x: 10, y: 5 },
+        completed: false
+      },
+      {
+        type: "defeat-enemy",
+        description: "Merge the feature branch to defeat the Merge Guardian",
+        enemyId: "merge-guardian",
+        completed: false
+      }
+    ],
+    obstacles: [
+      { x: 3, y: 7 }, { x: 3, y: 6 }, { x: 3, y: 5 },
+      { x: 5, y: 7 }, { x: 5, y: 4 }, { x: 5, y: 3 },
+      { x: 7, y: 6 }, { x: 7, y: 5 }, { x: 7, y: 4 },
+      { x: 9, y: 7 }, { x: 9, y: 3 }
+    ],
+    enemies: [
+      {
+        id: "merge-guardian",
+        position: { x: 10, y: 2 },
+        name: "Merge Guardian",
+        description: "Guards the merge point - merge the branches to pass!",
+        health: 1,
+        maxHealth: 1,
+        defeated: false,
+        correctCommands: ["git merge feature"],
+        hint: "Use 'git merge feature' to merge the feature branch",
+        blockMessage: "The Merge Guardian blocks the final path! Merge the feature branch to proceed."
+      }
+    ],
+    collectibles: []
+  },
+  {
+    id: 7,
+    title: "Time Travel",
+    type: "hybrid",
+    description: "Create and switch branches",
+    tutorial: "Branches let you work on different versions of your code simultaneously. The Branch Warden guards two paths - create a new branch called 'feature' to unlock both routes!",
+    mapSize: { width: 14, height: 10 },
+    startPosition: { x: 7, y: 8 },
+    gitConcept: "Git Branches",
+    branchInfo: { branch: 'main', prerequisite: [6] },
+    objectives: [
+      {
+        type: "defeat-enemy",
+        description: "Create a feature branch to defeat the Branch Warden",
+        enemyId: "branch-warden",
+        completed: false
+      },
+      {
+        type: "reach",
+        description: "Explore the feature branch path",
+        target: { x: 3, y: 2 },
+        completed: false
+      },
+      {
+        type: "reach",
+        description: "Return to the main branch path",
+        target: { x: 11, y: 2 },
+        completed: false
+      }
+    ],
+    obstacles: [
+      { x: 7, y: 4 }
+    ],
+    enemies: [
+      {
+        id: "branch-warden",
+        position: { x: 7, y: 6 },
+        name: "Branch Warden",
+        description: "Guards the branching paths - create a branch to pass!",
+        health: 1,
+        maxHealth: 1,
+        defeated: false,
+        correctCommands: ["git branch feature", "git checkout -b feature", "git switch -c feature"],
+        hint: "Use 'git branch feature' or 'git checkout -b feature' to create a new branch",
+        blockMessage: "The Branch Warden blocks both paths! Create a 'feature' branch to proceed."
+      }
+    ],
+    collectibles: []
   },
   {
     id: 8,
