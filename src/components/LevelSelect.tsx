@@ -237,7 +237,7 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
             Start Adventure
           </Button>
 
-          {completedLevels.length > 0 && (
+          {completedLevels && completedLevels.length > 0 && (
             <div>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
