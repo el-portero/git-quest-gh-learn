@@ -1,14 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import { Level, Position, TILE_SIZE, getTileColor } from '@/lib/game-data';
+import { Level, Position, TILE_SIZE, getTileColor, Enemy } from '@/lib/game-data';
 
 interface GameCanvasProps {
   level: Level;
   onObjectiveComplete: (index: number) => void;
   playerPosition: Position;
   setPlayerPosition: (pos: Position) => void;
+  onEnemyEncounter: (enemy: Enemy) => void;
 }
 
-export function GameCanvas({ level, onObjectiveComplete, playerPosition, setPlayerPosition }: GameCanvasProps) {
+export function GameCanvas({ 
+  level, 
+  onObjectiveComplete, 
+  playerPosition, 
+  setPlayerPosition,
+  onEnemyEncounter 
+}: GameCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [facingDirection, setFacingDirection] = useState<'up' | 'down' | 'left' | 'right'>('down');
 
@@ -44,31 +51,55 @@ export function GameCanvas({ level, onObjectiveComplete, playerPosition, setPlay
       setFacingDirection(newDirection);
 
       if (
-        newX >= 0 &&
-        newX < level.mapSize.width &&
-        newY >= 0 &&
-        newY < level.mapSize.height &&
-        !level.obstacles?.some(obs => obs.x === newX && obs.y === newY)
+        newX < 0 ||
+        newX >= level.mapSize.width ||
+        newY < 0 ||
+        newY >= level.mapSize.height
       ) {
-        setPlayerPosition({ x: newX, y: newY });
-
-        level.objectives.forEach((obj, index) => {
-          if (obj.type === 'reach' && obj.target && obj.target.x === newX && obj.target.y === newY && !obj.completed) {
-            onObjectiveComplete(index);
-          }
-        });
-
-        level.collectibles?.forEach((collectible, idx) => {
-          if (collectible.position.x === newX && collectible.position.y === newY && !collectible.collected) {
-            collectible.collected = true;
-          }
-        });
+        return;
       }
+
+      if (level.obstacles?.some(obs => obs.x === newX && obs.y === newY)) {
+        return;
+      }
+
+      const enemy = level.enemies?.find(e => e.position.x === newX && e.position.y === newY && !e.defeated);
+      if (enemy) {
+        onEnemyEncounter(enemy);
+        return;
+      }
+
+      setPlayerPosition({ x: newX, y: newY });
+
+      level.objectives.forEach((obj, index) => {
+        if (obj.type === 'reach' && obj.target && obj.target.x === newX && obj.target.y === newY && !obj.completed) {
+          onObjectiveComplete(index);
+        }
+      });
+
+      level.collectibles?.forEach((collectible) => {
+        if (collectible.position.x === newX && collectible.position.y === newY && !collectible.collected) {
+          collectible.collected = true;
+          
+          const collectObjective = level.objectives.find(
+            obj => obj.type === 'collect' && obj.itemLabel === collectible.label
+          );
+          if (collectObjective) {
+            const allCollected = level.collectibles?.every(c => c.collected);
+            if (allCollected) {
+              const objIndex = level.objectives.indexOf(collectObjective);
+              if (objIndex !== -1) {
+                onObjectiveComplete(objIndex);
+              }
+            }
+          }
+        }
+      });
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [playerPosition, level, onObjectiveComplete, setPlayerPosition, facingDirection]);
+  }, [playerPosition, level, onObjectiveComplete, setPlayerPosition, facingDirection, onEnemyEncounter]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -126,9 +157,39 @@ export function GameCanvas({ level, onObjectiveComplete, playerPosition, setPlay
       }
     });
 
+    level.enemies?.forEach((enemy) => {
+      if (!enemy.defeated) {
+        drawEnemy(ctx, enemy.position.x, enemy.position.y);
+      }
+    });
+
     drawPlayer(ctx, playerPosition.x, playerPosition.y, facingDirection);
 
   }, [level, playerPosition, facingDirection]);
+
+  function drawEnemy(ctx: CanvasRenderingContext2D, x: number, y: number) {
+    const centerX = x * TILE_SIZE + TILE_SIZE / 2;
+    const centerY = y * TILE_SIZE + TILE_SIZE / 2;
+    const size = 18;
+
+    ctx.fillStyle = '#E74C3C';
+    ctx.fillRect(centerX - size / 2, centerY - size / 2, size, size);
+
+    ctx.fillStyle = '#C0392B';
+    const hornSize = 6;
+    ctx.fillRect(centerX - size / 2 - 2, centerY - size / 2 - hornSize, 4, hornSize);
+    ctx.fillRect(centerX + size / 2 - 2, centerY - size / 2 - hornSize, 4, hornSize);
+
+    ctx.fillStyle = '#FFFFFF';
+    const eyeSize = 3;
+    const eyeOffset = 4;
+    ctx.fillRect(centerX - eyeOffset, centerY - 2, eyeSize, eyeSize);
+    ctx.fillRect(centerX + eyeOffset - eyeSize, centerY - 2, eyeSize, eyeSize);
+
+    ctx.strokeStyle = '#C0392B';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(centerX - size / 2, centerY - size / 2, size, size);
+  }
 
   function drawPlayer(ctx: CanvasRenderingContext2D, x: number, y: number, direction: string) {
     const centerX = x * TILE_SIZE + TILE_SIZE / 2;
