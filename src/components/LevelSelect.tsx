@@ -243,10 +243,18 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                 <line x1="550" y1="100" x2="700" y2="100" stroke="var(--secondary)" strokeWidth="4" />
                 <line x1="550" y1="300" x2="700" y2="300" stroke="var(--accent)" strokeWidth="4" />
                 
-                <line x1="700" y1="100" x2="850" y2="200" stroke="var(--secondary)" strokeWidth="4" />
-                <line x1="700" y1="300" x2="850" y2="200" stroke="var(--accent)" strokeWidth="4" />
+                <line x1="700" y1="100" x2="775" y2="150" stroke="var(--secondary)" strokeWidth="4" />
                 
-                <line x1="850" y1="200" x2="950" y2="200" stroke="var(--primary)" strokeWidth="4" />
+                <line x1="775" y1="150" x2="850" y2="150" stroke="var(--primary)" strokeWidth="4" />
+                <circle cx="775" cy="150" r="8" fill="var(--primary)" stroke="var(--background)" strokeWidth="2" />
+                
+                <line x1="850" y1="150" x2="900" y2="150" stroke="var(--primary)" strokeWidth="4" />
+                <circle cx="900" cy="150" r="8" fill="var(--primary)" stroke="var(--background)" strokeWidth="2" />
+                
+                <line x1="900" y1="150" x2="950" y2="200" stroke="var(--primary)" strokeWidth="4" />
+                
+                <line x1="700" y1="300" x2="950" y2="200" stroke="var(--accent)" strokeWidth="4" />
+                
                 <line x1="950" y1="200" x2="1050" y2="200" stroke="var(--primary)" strokeWidth="4" />
                 
                 <g transform="translate(100, 200)">
@@ -309,13 +317,16 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                   </foreignObject>
                 </g>
                 
-                <g transform="translate(850, 200)">
+                <g transform="translate(775, 150)">
+                  <text x="0" y="-25" textAnchor="middle" fill="var(--secondary)" fontSize="9" fontFamily="Press Start 2P">merge</text>
+                </g>
+                
+                <g transform="translate(850, 150)">
                   <foreignObject x="-40" y="-40" width="80" height="80">
                     <div className="flex items-center justify-center w-full h-full">
                       {renderLevelNode(mainBranch[3])}
                     </div>
                   </foreignObject>
-                  <text x="0" y="-60" textAnchor="middle" fill="var(--secondary)" fontSize="10" fontFamily="Press Start 2P">merge</text>
                 </g>
                 
                 <g transform="translate(950, 200)">
@@ -324,6 +335,7 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                       {renderLevelNode(mainBranch[4])}
                     </div>
                   </foreignObject>
+                  <text x="0" y="-60" textAnchor="middle" fill="var(--accent)" fontSize="9" fontFamily="Press Start 2P">merge</text>
                 </g>
                 
                 <g transform="translate(1050, 200)">
