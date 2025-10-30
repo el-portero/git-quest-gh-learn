@@ -42,7 +42,7 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
             GitQuest
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Master Git through an 8-bit adventure. Complete levels to unlock new concepts!
+            Battle code-corrupting monsters with the power of Git commands! Journey through 8 epic levels—from taming the Chaos Beast with your first repository to mastering the ancient Git Database. Each enemy defeated unlocks new version control powers. No prior Git experience required—just a hero's courage and a willingness to learn!
           </p>
           
           <div className="max-w-md mx-auto space-y-2">
