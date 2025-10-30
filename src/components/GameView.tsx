@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Level, Position } from '@/lib/game-data';
+import { Level, Position, Enemy } from '@/lib/game-data';
 import { GameCanvas } from './GameCanvas';
-import { CommandTerminal } from './CommandTerminal';
+import { EnemyBattle } from './EnemyBattle';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
@@ -21,12 +21,14 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
   const [showTutorial, setShowTutorial] = useState(true);
   const [showCompletion, setShowCompletion] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [currentEnemy, setCurrentEnemy] = useState<Enemy | null>(null);
 
   useEffect(() => {
     setPlayerPosition(level.startPosition);
     setObjectives(level.objectives.map(obj => ({ ...obj, completed: false })));
     setShowTutorial(true);
     setShowCompletion(false);
+    setCurrentEnemy(null);
   }, [level]);
 
   useEffect(() => {
@@ -55,10 +57,33 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
     handleObjectiveComplete(index);
   };
 
+  const handleEnemyEncounter = (enemy: Enemy) => {
+    setCurrentEnemy(enemy);
+  };
+
+  const handleEnemyDefeat = () => {
+    if (currentEnemy) {
+      currentEnemy.defeated = true;
+      
+      const enemyObjective = objectives.find(obj => obj.type === 'defeat-enemy' && obj.enemyId === currentEnemy.id);
+      if (enemyObjective) {
+        const objIndex = objectives.indexOf(enemyObjective);
+        if (objIndex !== -1) {
+          handleObjectiveComplete(objIndex);
+        }
+      }
+      
+      setCurrentEnemy(null);
+    }
+  };
+
+  const handleEnemyFlee = () => {
+    setCurrentEnemy(null);
+  };
+
   const completedCount = objectives.filter(obj => obj.completed).length;
   const progress = (completedCount / objectives.length) * 100;
 
-  const commandObjectives = objectives.filter(obj => obj.type === 'command' || obj.type === 'sequence');
   const movementObjectives = objectives.filter(obj => obj.type === 'reach');
 
   return (
@@ -106,6 +131,7 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
               onObjectiveComplete={handleObjectiveComplete}
               playerPosition={playerPosition}
               setPlayerPosition={setPlayerPosition}
+              onEnemyEncounter={handleEnemyEncounter}
             />
             
             <div className="bg-card p-4 pixel-border space-y-2">
@@ -144,22 +170,17 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
                 ))}
               </div>
             </div>
-
-            {commandObjectives.map((obj, index) => {
-              const originalIndex = objectives.findIndex(o => o === obj);
-              return !obj.completed && (
-                <CommandTerminal
-                  key={originalIndex}
-                  expectedCommands={obj.commands || []}
-                  onCommandSuccess={() => handleCommandSuccess(originalIndex)}
-                  commandDescription={obj.description}
-                  isSequence={obj.type === 'sequence'}
-                />
-              );
-            })}
           </div>
         </div>
       </div>
+
+      {currentEnemy && (
+        <EnemyBattle
+          enemy={currentEnemy}
+          onDefeat={handleEnemyDefeat}
+          onClose={handleEnemyFlee}
+        />
+      )}
 
       <Dialog open={showTutorial} onOpenChange={setShowTutorial}>
         <DialogContent className="pixel-border max-w-2xl">
@@ -225,14 +246,12 @@ export function GameView({ level, onComplete, onBack }: GameViewProps) {
               </div>
             )}
             
-            {commandObjectives.length > 0 && (
-              <div className="bg-primary/10 p-3 border-l-2 border-primary">
-                <p className="text-sm font-bold mb-1">Command Tip:</p>
-                <p className="text-sm text-muted-foreground">
-                  Remember, Git commands follow the pattern: git [command] [options]
-                </p>
-              </div>
-            )}
+            <div className="bg-primary/10 p-3 border-l-2 border-primary">
+              <p className="text-sm font-bold mb-1">Battle Tip:</p>
+              <p className="text-sm text-muted-foreground">
+                When you encounter an enemy, use the correct Git commands to defeat them!
+              </p>
+            </div>
           </div>
           <Button onClick={() => setShowHint(false)} variant="outline" className="w-full">
             Close
