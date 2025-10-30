@@ -13,11 +13,11 @@ An interactive 8-bit style game that teaches users Git fundamentals through enga
 ## Essential Features
 
 ### Level-Based Progression System
-- **Functionality**: 8+ progressive levels covering Git basics to internals, with locked/unlocked states
-- **Purpose**: Structured learning path prevents overwhelming beginners while maintaining engagement
+- **Functionality**: 8+ progressive levels covering Git basics to internals, with locked/unlocked states displayed in a git branch diagram visualization
+- **Purpose**: Structured learning path prevents overwhelming beginners while maintaining engagement, and visually teaches branching concepts through the level select itself
 - **Trigger**: User completes level objectives (command tasks + movement challenges)
-- **Progression**: Start screen → Select unlocked level → Play level (move character, type commands) → Complete objectives → Level complete animation → Unlock next level → Return to level select
-- **Success criteria**: Levels unlock sequentially, progress persists between sessions, each level teaches distinct Git concept
+- **Progression**: Start screen → Select unlocked level from branch diagram → Play level (move character, type commands) → Complete objectives → Close all popups → Level complete modal → Unlock next level(s) → Return to level select
+- **Success criteria**: Levels unlock based on prerequisites, progress persists between sessions, each level teaches distinct Git concept, branch diagram shows main/feature/experimental branches with merge points
 
 ### Character Movement System
 - **Functionality**: Top-down 2D grid movement using arrow keys (up/down/left/right) on pixelated tilemap
@@ -106,22 +106,24 @@ Animations should feel snappy and responsive like classic 8-bit games—no smoot
 
 - **Components**: 
   - Dialog for level start tutorials and completion screens with pixel border styling
-  - Card for level select tiles with hover states (lift effect)
+  - Tooltip for level information on hover in branch diagram
+  - Card for level select nodes styled as git commits in branch visualization
   - Input for command terminal with monospace font and terminal styling
   - Button with pixel art borders for navigation (Start, Next Level, Hint)
   - Progress bar with pixel block segments showing level completion
-  - Badge for completed level indicators
+  - Badge for completed level indicators and branch labels (main/feature/experimental)
   - Tabs for switching between different learning sections (Commands, Concepts, Internals)
   
 - **Customizations**: 
   - Custom pixel art Canvas component for game rendering (character, tilemap, Git visualizations)
   - Custom CommandTerminal component styled as retro CRT display
-  - Custom LevelMap component for progression tree visualization
+  - Custom GitBranchDiagram component for level select showing interconnected levels as commit nodes with SVG branch lines
   
 - **States**: 
+  - Level nodes: Default shows level number with branch color, hover scales up and shows tooltip, completed shows filled with branch color and checkmark, locked shows grayscale with lock icon
+  - Branch lines: Color-coded by branch type (main=primary green, feature=secondary blue, experimental=accent yellow)
   - Buttons: Default has pixel border shadow, hover lifts up 2px with brighter colors, active shows pressed state (drops back down), disabled shows grayed out with reduced opacity
   - Input: Focus shows blinking cursor animation, valid command shows green border flash, invalid shows red shake animation
-  - Level cards: Locked shows grayscale with lock icon, unlocked shows full color with pulse animation, completed shows checkmark badge
   
 - **Icon Selection**: 
   - Phosphor icons in duotone style sized 24px for UI chrome: GitBranch, GitCommit, GitFork, GitPullRequest for Git concepts; ArrowUp/Down/Left/Right for movement hints; Play, Pause for game controls; LightbulbFilament for hints; Trophy for completion
@@ -136,5 +138,6 @@ Animations should feel snappy and responsive like classic 8-bit games—no smoot
   - Desktop-first with game canvas centered, commands below
   - Mobile shows virtual D-pad overlay for movement (positioned bottom-left)
   - Command input becomes sticky bottom sheet on mobile
-  - Level select switches from grid to single column vertical scroll
-  - Touch targets minimum 44x44px for virtual buttons
+  - Level select branch diagram becomes scrollable horizontally and vertically on mobile with compact node sizes
+  - Branch diagram scales down on smaller screens while maintaining readability
+  - Touch targets minimum 44x44px for level nodes and virtual buttons

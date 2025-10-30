@@ -1,7 +1,6 @@
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Lock, CheckCircle, Play, Trash } from '@phosphor-icons/react';
+import { Lock, CheckCircle, Play, Trash, GitBranch } from '@phosphor-icons/react';
 import { LEVELS } from '@/lib/game-data';
 import {
   AlertDialog,
@@ -14,6 +13,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface LevelSelectProps {
   completedLevels: number[];
@@ -24,8 +29,14 @@ interface LevelSelectProps {
 
 export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onResetProgress }: LevelSelectProps) {
   const isLevelUnlocked = (levelId: number) => {
-    if (levelId === 1) return true;
-    return completedLevels.includes(levelId - 1);
+    const level = LEVELS.find(l => l.id === levelId);
+    if (!level || !level.branchInfo || !level.branchInfo.prerequisite) return false;
+    
+    if (level.branchInfo.prerequisite.length === 0) return true;
+    
+    return level.branchInfo.prerequisite.every(prereqId => 
+      completedLevels.includes(prereqId)
+    );
   };
 
   const isLevelCompleted = (levelId: number) => {
@@ -34,18 +45,111 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
 
   const progress = (completedLevels.length / LEVELS.length) * 100;
 
+  const getBranchColor = (branch: 'main' | 'feature' | 'experimental') => {
+    switch (branch) {
+      case 'main': return 'text-primary';
+      case 'feature': return 'text-secondary';
+      case 'experimental': return 'text-accent';
+    }
+  };
+
+  const getBranchBgColor = (branch: 'main' | 'feature' | 'experimental') => {
+    switch (branch) {
+      case 'main': return 'bg-primary';
+      case 'feature': return 'bg-secondary';
+      case 'experimental': return 'bg-accent';
+    }
+  };
+
+  const mainBranch = LEVELS.filter(l => l.branchInfo?.branch === 'main');
+  const featureBranch = LEVELS.filter(l => l.branchInfo?.branch === 'feature');
+  const experimentalBranch = LEVELS.filter(l => l.branchInfo?.branch === 'experimental');
+
+  const renderLevelNode = (level: typeof LEVELS[0], isCompact = false) => {
+    const unlocked = isLevelUnlocked(level.id);
+    const completed = isLevelCompleted(level.id);
+    const branch = level.branchInfo?.branch || 'main';
+
+    return (
+      <Tooltip key={level.id}>
+        <TooltipTrigger asChild>
+          <button
+            onClick={() => unlocked && onSelectLevel(level.id)}
+            disabled={!unlocked}
+            className={`
+              relative group
+              ${isCompact ? 'w-16 h-16' : 'w-20 h-20'}
+              flex items-center justify-center
+              pixel-border
+              transition-all duration-200
+              ${unlocked ? 'cursor-pointer hover:scale-110 hover:z-10' : 'opacity-50 cursor-not-allowed'}
+              ${completed ? getBranchBgColor(branch) : 'bg-card'}
+              ${completed ? 'border-4' : 'border-2'}
+              pixel-shadow
+            `}
+          >
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div className={`text-lg pixel-font ${completed ? 'text-primary-foreground' : getBranchColor(branch)}`}>
+                {level.id}
+              </div>
+              {completed && (
+                <CheckCircle size={16} weight="fill" className="text-primary-foreground mt-1" />
+              )}
+              {!unlocked && (
+                <Lock size={16} weight="fill" className="text-muted-foreground mt-1" />
+              )}
+            </div>
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" className="max-w-xs pixel-border">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="font-bold text-sm pixel-font leading-relaxed">
+                {level.title}
+              </h3>
+              <Badge variant="secondary" className="text-xs">
+                {branch}
+              </Badge>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {level.description}
+            </p>
+            <div className="text-xs text-accent">
+              {level.gitConcept}
+            </div>
+            {unlocked && (
+              <Button 
+                size="sm" 
+                className="w-full pixel-shadow mt-2"
+                variant={completed ? 'secondary' : 'default'}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelectLevel(level.id);
+                }}
+              >
+                <Play size={14} weight="fill" />
+                {completed ? 'Replay' : 'Start'}
+              </Button>
+            )}
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8">
-      <div className="max-w-5xl w-full space-y-8">
+    <TooltipProvider>
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 md:p-8 overflow-x-auto">
+        <div className="w-full max-w-7xl space-y-8">
         <div className="text-center space-y-4">
-          <h1 className="text-4xl md:text-5xl text-primary pixel-font leading-relaxed">
+          <h1 className="text-3xl md:text-5xl text-primary pixel-font leading-relaxed">
             GitQuest
           </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto px-4">
             ⚔️ Battle code-corrupting monsters with the power of Git commands! 🗺️ Journey through 8 epic levels—from taming the Chaos Beast with your first repository to mastering the ancient Git Database. 💪 Each enemy defeated unlocks new version control powers. ✨ No prior Git experience required—just a hero's courage and a willingness to learn! 🎮
           </p>
           
-          <div className="max-w-md mx-auto space-y-2">
+          <div className="max-w-md mx-auto space-y-2 px-4">
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>Progress</span>
               <span>{completedLevels.length} / {LEVELS.length}</span>
@@ -59,111 +163,118 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {LEVELS.map((level) => {
-            const unlocked = isLevelUnlocked(level.id);
-            const completed = isLevelCompleted(level.id);
+        <div className="flex flex-col items-center gap-8 min-w-max px-4">
+          <div className="flex items-center gap-6 text-sm">
+            <div className="flex items-center gap-2">
+              <GitBranch size={20} className="text-primary" weight="bold" />
+              <span className="pixel-font text-primary">main</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <GitBranch size={20} className="text-secondary" weight="bold" />
+              <span className="pixel-font text-secondary">feature</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <GitBranch size={20} className="text-accent" weight="bold" />
+              <span className="pixel-font text-accent">experimental</span>
+            </div>
+          </div>
 
-            return (
-              <Card
-                key={level.id}
-                className={`p-4 space-y-3 transition-all cursor-pointer hover:scale-105 pixel-shadow ${
-                  !unlocked ? 'opacity-50 grayscale' : ''
-                } ${completed ? 'border-primary border-2' : ''}`}
-                onClick={() => unlocked && onSelectLevel(level.id)}
-              >
-                <div className="flex items-start justify-between">
+          <div className="relative flex justify-center items-start">
+            <div className="flex flex-col items-center gap-2">
+              {renderLevelNode(mainBranch[0])}
+              <div className="h-12 w-1 bg-primary" />
+              {renderLevelNode(mainBranch[1])}
+              <div className="h-12 w-1 bg-primary" />
+              {renderLevelNode(mainBranch[2])}
+              
+              <div className="relative h-40 w-full flex items-center justify-center">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center">
+                  <div className="h-8 w-1 bg-primary" />
+                  
+                  <svg className="w-[600px] h-24" viewBox="0 0 600 100">
+                    <line x1="300" y1="0" x2="150" y2="50" stroke="var(--secondary)" strokeWidth="3" />
+                    <line x1="300" y1="0" x2="450" y2="50" stroke="var(--accent)" strokeWidth="3" />
+                    <line x1="150" y1="50" x2="300" y2="100" stroke="var(--secondary)" strokeWidth="3" />
+                    <line x1="300" y1="50" x2="300" y2="100" stroke="var(--primary)" strokeWidth="3" />
+                    <line x1="450" y1="50" x2="300" y2="100" stroke="var(--accent)" strokeWidth="3" />
+                  </svg>
+                  
+                  <div className="h-8 w-1 bg-primary" />
+                </div>
+                
+                <div className="absolute top-12 w-full flex justify-center items-center gap-24">
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl pixel-font text-primary">
-                      {level.id}
-                    </span>
-                    {completed && (
-                      <CheckCircle size={20} weight="fill" className="text-primary" />
-                    )}
-                    {!unlocked && (
-                      <Lock size={20} weight="fill" className="text-muted-foreground" />
-                    )}
+                    {renderLevelNode(featureBranch[0], true)}
+                    <Badge variant="secondary" className="text-xs pixel-font">feature</Badge>
                   </div>
-                  <Badge variant={completed ? 'default' : 'secondary'} className="text-xs">
-                    {level.type}
-                  </Badge>
+                  
+                  <div className="flex items-center gap-2">
+                    {renderLevelNode(mainBranch[3], true)}
+                    <Badge className="text-xs pixel-font">main</Badge>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-xs pixel-font text-accent border-accent">experimental</Badge>
+                    {renderLevelNode(experimentalBranch[0], true)}
+                  </div>
                 </div>
-
-                <div className="space-y-1">
-                  <h3 className="font-bold text-sm pixel-font leading-relaxed">
-                    {level.title}
-                  </h3>
-                  <p className="text-xs text-muted-foreground line-clamp-2">
-                    {level.description}
-                  </p>
-                </div>
-
-                <div className="text-xs text-accent">
-                  {level.gitConcept}
-                </div>
-
-                {unlocked && (
-                  <Button 
-                    size="sm" 
-                    className="w-full pixel-shadow"
-                    variant={completed ? 'secondary' : 'default'}
-                  >
-                    <Play size={16} weight="fill" />
-                    {completed ? 'Replay' : 'Start'}
-                  </Button>
-                )}
-              </Card>
-            );
-          })}
+              </div>
+              
+              {renderLevelNode(mainBranch[4])}
+              <div className="h-12 w-1 bg-primary" />
+              {renderLevelNode(mainBranch[5])}
+            </div>
+          </div>
         </div>
 
-        <div className="text-center">
+        <div className="text-center space-y-4">
           <Button 
             size="lg" 
             onClick={onStartGame}
-            className="pixel-shadow text-lg pixel-font"
+            className="pixel-shadow text-base md:text-lg pixel-font"
           >
             <Play size={24} weight="fill" />
             Start Adventure
           </Button>
-        </div>
 
-        {completedLevels.length > 0 && (
-          <div className="text-center">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button 
-                  variant="destructive"
-                  size="sm"
-                  className="pixel-shadow"
-                >
-                  <Trash size={16} weight="fill" />
-                  Reset Progress
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent className="pixel-border">
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="pixel-font text-lg leading-relaxed">
-                    Reset All Progress?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will clear your progress for all levels. This action cannot be undone.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel className="pixel-shadow">Cancel</AlertDialogCancel>
-                  <AlertDialogAction 
-                    onClick={onResetProgress}
-                    className="pixel-shadow bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          {completedLevels.length > 0 && (
+            <div>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button 
+                    variant="destructive"
+                    size="sm"
+                    className="pixel-shadow"
                   >
+                    <Trash size={16} weight="fill" />
                     Reset Progress
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        )}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="pixel-border">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="pixel-font text-lg leading-relaxed">
+                      Reset All Progress?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will clear your progress for all levels. This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="pixel-shadow">Cancel</AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={onResetProgress}
+                      className="pixel-shadow bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      Reset Progress
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          )}
+        </div>
       </div>
     </div>
+    </TooltipProvider>
   );
 }

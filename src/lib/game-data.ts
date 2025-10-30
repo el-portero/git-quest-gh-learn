@@ -50,6 +50,10 @@ export interface Level {
     type: 'commit-tree' | 'branch-diagram' | 'staging-area';
     data: any;
   };
+  branchInfo?: {
+    branch: 'main' | 'feature' | 'experimental';
+    prerequisite?: number[];
+  };
 }
 
 export const LEVELS: Level[] = [
@@ -62,6 +66,7 @@ export const LEVELS: Level[] = [
     mapSize: { width: 10, height: 8 },
     startPosition: { x: 1, y: 4 },
     gitConcept: "Git Basics - Initialization",
+    branchInfo: { branch: 'main', prerequisite: [] },
     objectives: [
       {
         type: "defeat-enemy",
@@ -114,6 +119,7 @@ export const LEVELS: Level[] = [
     mapSize: { width: 12, height: 8 },
     startPosition: { x: 1, y: 4 },
     gitConcept: "Staging Changes",
+    branchInfo: { branch: 'main', prerequisite: [1] },
     objectives: [
       {
         type: "defeat-enemy",
@@ -187,6 +193,7 @@ export const LEVELS: Level[] = [
     mapSize: { width: 10, height: 8 },
     startPosition: { x: 1, y: 4 },
     gitConcept: "Committing Changes",
+    branchInfo: { branch: 'main', prerequisite: [2] },
     objectives: [
       {
         type: "defeat-enemy",
@@ -244,6 +251,7 @@ export const LEVELS: Level[] = [
     mapSize: { width: 10, height: 8 },
     startPosition: { x: 1, y: 4 },
     gitConcept: "Repository Status",
+    branchInfo: { branch: 'feature', prerequisite: [3] },
     objectives: [
       {
         type: "defeat-enemy",
@@ -304,6 +312,7 @@ export const LEVELS: Level[] = [
     mapSize: { width: 14, height: 10 },
     startPosition: { x: 7, y: 8 },
     gitConcept: "Git Branches",
+    branchInfo: { branch: 'main', prerequisite: [3] },
     objectives: [
       {
         type: "defeat-enemy",
@@ -352,6 +361,7 @@ export const LEVELS: Level[] = [
     mapSize: { width: 12, height: 10 },
     startPosition: { x: 1, y: 8 },
     gitConcept: "Merging Branches",
+    branchInfo: { branch: 'main', prerequisite: [4, 5] },
     objectives: [
       {
         type: "reach",
@@ -397,6 +407,7 @@ export const LEVELS: Level[] = [
     mapSize: { width: 14, height: 8 },
     startPosition: { x: 1, y: 4 },
     gitConcept: "Navigating History",
+    branchInfo: { branch: 'experimental', prerequisite: [3] },
     objectives: [
       {
         type: "defeat-enemy",
@@ -462,6 +473,7 @@ export const LEVELS: Level[] = [
     mapSize: { width: 12, height: 8 },
     startPosition: { x: 1, y: 4 },
     gitConcept: "Git Internals",
+    branchInfo: { branch: 'main', prerequisite: [6] },
     objectives: [
       {
         type: "defeat-enemy",
