@@ -23,6 +23,18 @@ export function GameCanvas({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
       
+      const activeElement = document.activeElement;
+      const isInputFocused = activeElement instanceof HTMLInputElement || 
+                             activeElement instanceof HTMLTextAreaElement ||
+                             activeElement?.tagName === 'INPUT' ||
+                             activeElement?.tagName === 'TEXTAREA';
+      
+      const isModalOpen = document.querySelector('[role="dialog"]') !== null;
+      
+      if (isInputFocused || isModalOpen) {
+        return;
+      }
+      
       e.preventDefault();
       
       let newX = playerPosition.x;
