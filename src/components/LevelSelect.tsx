@@ -273,43 +273,36 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                 </g>
                 
                 <g transform="translate(400, 200)">
-                  <circle cx="0" cy="0" r="8" fill="var(--primary)" />
                   <text x="0" y="35" textAnchor="middle" fill="var(--primary)" fontSize="10" fontFamily="Press Start 2P">split</text>
                 </g>
-                
+                </g>
                 <g transform="translate(550, 100)">
                   <foreignObject x="-40" y="-40" width="80" height="80">
-                    <div className="flex items-center justify-center w-full h-full">
                       {renderLevelNode(featureBranch[0])}
-                    </div>
-                  </foreignObject>
-                  <text x="0" y="-55" textAnchor="middle" fill="var(--secondary)" fontSize="12" fontFamily="Press Start 2P">feature</text>
-                </g>
-                
-                <g transform="translate(550, 300)">
-                  <foreignObject x="-40" y="-40" width="80" height="80">
                     <div className="flex items-center justify-center w-full h-full">
-                      {renderLevelNode(experimentalBranch[0])}
-                    </div>
                   </foreignObject>
-                  <text x="0" y="65" textAnchor="middle" fill="var(--accent)" fontSize="12" fontFamily="Press Start 2P">experimental</text>
+                    </div>
                 </g>
-                
+                <g transform="translate(550, 300)">
+                </g>
+                    <div className="flex items-center justify-center w-full h-full">
+                <g transform="translate(550, 300)">
+                  </foreignObject>
+                    <div className="flex items-center justify-center w-full h-full">
+                </g>
+                    </div>
                 <g transform="translate(700, 100)">
-                  <circle cx="0" cy="0" r="8" fill="var(--secondary)" />
                 </g>
-                
+                </g>
                 <g transform="translate(700, 300)">
                   <circle cx="0" cy="0" r="8" fill="var(--accent)" />
                 </g>
                 
                 <g transform="translate(850, 200)">
-                  <foreignObject x="-40" y="-40" width="80" height="80">
                     <div className="flex items-center justify-center w-full h-full">
                       {renderLevelNode(mainBranch[3])}
-                    </div>
+                </g>
                   </foreignObject>
-                  <text x="0" y="65" textAnchor="middle" fill="var(--primary)" fontSize="10" fontFamily="Press Start 2P">merge</text>
                 </g>
                 
                 <g transform="translate(950, 200)">
@@ -317,23 +310,23 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                     <div className="flex items-center justify-center w-full h-full">
                       {renderLevelNode(mainBranch[4])}
                     </div>
-                  </foreignObject>
                 </g>
                 
-                <g transform="translate(1050, 200)">
+                <g transform="translate(950, 200)">
                   <foreignObject x="-40" y="-40" width="80" height="80">
                     <div className="flex items-center justify-center w-full h-full">
+                      {renderLevelNode(mainBranch[4])}
                       {renderLevelNode(mainBranch[5])}
                     </div>
-                  </foreignObject>
                 </g>
-              </svg>
+                </g>
+                <g transform="translate(1050, 200)">
             </div>
           </div>
 
           <div className="absolute top-4 right-4 flex flex-col gap-2">
             <Button
-              size="icon"
+                </g>
               variant="secondary"
               className="pixel-shadow w-10 h-10"
               onClick={handleZoomIn}
