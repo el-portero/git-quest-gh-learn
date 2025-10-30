@@ -243,8 +243,8 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                 <line x1="550" y1="100" x2="700" y2="100" stroke="var(--secondary)" strokeWidth="4" />
                 <line x1="550" y1="300" x2="700" y2="300" stroke="var(--accent)" strokeWidth="4" />
                 
-                <line x1="700" y1="100" x2="800" y2="100" stroke="var(--secondary)" strokeWidth="4" />
-                <line x1="700" y1="300" x2="800" y2="300" stroke="var(--accent)" strokeWidth="4" />
+                <line x1="700" y1="100" x2="800" y2="100" stroke="var(--primary)" strokeWidth="4" />
+                <line x1="700" y1="300" x2="800" y2="300" stroke="var(--primary)" strokeWidth="4" />
                 
                 <line x1="800" y1="100" x2="800" y2="300" stroke="var(--primary)" strokeWidth="4" />
                 
