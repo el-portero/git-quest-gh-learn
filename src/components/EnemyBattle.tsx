@@ -24,6 +24,18 @@ export function EnemyBattle({ enemy, onDefeat, onClose }: EnemyBattleProps) {
     inputRef.current?.focus();
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const validateCommand = (cmd: string): boolean => {
     const trimmedCmd = cmd.trim().toLowerCase();
     
