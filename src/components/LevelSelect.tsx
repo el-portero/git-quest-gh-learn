@@ -1,16 +1,28 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Lock, CheckCircle, Play } from '@phosphor-icons/react';
+import { Lock, CheckCircle, Play, Trash } from '@phosphor-icons/react';
 import { LEVELS } from '@/lib/game-data';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 interface LevelSelectProps {
   completedLevels: number[];
   onSelectLevel: (levelId: number) => void;
   onStartGame: () => void;
+  onResetProgress: () => void;
 }
 
-export function LevelSelect({ completedLevels, onSelectLevel, onStartGame }: LevelSelectProps) {
+export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onResetProgress }: LevelSelectProps) {
   const isLevelUnlocked = (levelId: number) => {
     if (levelId === 1) return true;
     return completedLevels.includes(levelId - 1);
@@ -115,6 +127,42 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame }: Lev
             Start Adventure
           </Button>
         </div>
+
+        {completedLevels.length > 0 && (
+          <div className="text-center">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button 
+                  variant="destructive"
+                  size="sm"
+                  className="pixel-shadow"
+                >
+                  <Trash size={16} weight="fill" />
+                  Reset Progress
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="pixel-border">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="pixel-font text-lg leading-relaxed">
+                    Reset All Progress?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will clear your progress for all levels. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="pixel-shadow">Cancel</AlertDialogCancel>
+                  <AlertDialogAction 
+                    onClick={onResetProgress}
+                    className="pixel-shadow bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Reset Progress
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -41,6 +41,10 @@ function App() {
     setGameState('menu');
   };
 
+  const handleResetProgress = () => {
+    setCompletedLevels([]);
+  };
+
   return (
     <>
       {gameState === 'menu' && (
@@ -48,6 +52,7 @@ function App() {
           completedLevels={completedLevels || []}
           onSelectLevel={handleSelectLevel}
           onStartGame={handleStartGame}
+          onResetProgress={handleResetProgress}
         />
       )}
 
