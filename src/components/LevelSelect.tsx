@@ -331,10 +331,9 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                       {renderLevelNode(mainBranch[4])}
                     </div>
                   </foreignObject>
-                </g>
                 
                 <g transform="translate(1125, 200)">
-                  <foreignObject x="-40" y="-40" width="80" height="80">
+                <g transform="translate(1125, 200)">
                     <div className="flex items-center justify-center w-full h-full">
                       {renderLevelNode(mainBranch[5])}
                     </div>
