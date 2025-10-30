@@ -25,8 +25,18 @@ export function EnemyBattle({ enemy, onDefeat, onClose }: EnemyBattleProps) {
   }, []);
 
   const validateCommand = (cmd: string): boolean => {
-    const trimmedCmd = cmd.trim();
-    return enemy.correctCommands.some(expected => trimmedCmd === expected);
+    const trimmedCmd = cmd.trim().toLowerCase();
+    
+    return enemy.correctCommands.some(expected => {
+      const expectedLower = expected.toLowerCase();
+      
+      if (expectedLower.includes('git commit -m')) {
+        const commitPattern = /^git\s+commit\s+-m\s+["'].+["']$/i;
+        return commitPattern.test(trimmedCmd);
+      }
+      
+      return trimmedCmd === expectedLower;
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {

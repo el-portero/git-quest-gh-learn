@@ -27,13 +27,29 @@ export function CommandTerminal({
   }, []);
 
   const validateCommand = (cmd: string): boolean => {
-    const trimmedCmd = cmd.trim();
+    const trimmedCmd = cmd.trim().toLowerCase();
     
     if (isSequence) {
-      return trimmedCmd === expectedCommands[currentSequenceIndex];
+      const expectedLower = expectedCommands[currentSequenceIndex].toLowerCase();
+      
+      if (expectedLower.includes('git commit -m')) {
+        const commitPattern = /^git\s+commit\s+-m\s+["'].+["']$/i;
+        return commitPattern.test(trimmedCmd);
+      }
+      
+      return trimmedCmd === expectedLower;
     }
     
-    return expectedCommands.some(expected => trimmedCmd === expected);
+    return expectedCommands.some(expected => {
+      const expectedLower = expected.toLowerCase();
+      
+      if (expectedLower.includes('git commit -m')) {
+        const commitPattern = /^git\s+commit\s+-m\s+["'].+["']$/i;
+        return commitPattern.test(trimmedCmd);
+      }
+      
+      return trimmedCmd === expectedLower;
+    });
   };
 
   const getHint = (): string => {
