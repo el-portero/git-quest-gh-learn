@@ -246,6 +246,7 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                 
                 <line x1="850" y1="200" x2="950" y2="200" stroke="var(--primary)" strokeWidth="4" />
                 <line x1="950" y1="200" x2="1050" y2="200" stroke="var(--primary)" strokeWidth="4" />
+                
                 <g transform="translate(100, 200)">
                   <foreignObject x="-40" y="-40" width="80" height="80">
                     <div className="flex items-center justify-center w-full h-full">
@@ -274,44 +275,46 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                   <text x="0" y="35" textAnchor="middle" fill="var(--primary)" fontSize="10" fontFamily="Press Start 2P">split</text>
                 </g>
                 
-                ate(550, 100)">
+                <g transform="translate(550, 100)">
                   <foreignObject x="-40" y="-40" width="80" height="80">
                     <div className="flex items-center justify-center w-full h-full">
-                    </div>
                       {renderLevelNode(featureBranch[0])}
-                </g>
-                  </foreignObject>
-                <g transform="translate(550, 300)">
-                
-                    <div className="flex items-center justify-center w-full h-full">
-                  <foreignObject x="-40" y="-40" width="80" height="80">
                     </div>
+                  </foreignObject>
+                </g>
+                
+                <g transform="translate(550, 300)">
+                  <foreignObject x="-40" y="-40" width="80" height="80">
+                    <div className="flex items-center justify-center w-full h-full">
                       {renderLevelNode(experimentalBranch[0])}
                     </div>
-                
+                  </foreignObject>
                 </g>
                 
                 <g transform="translate(700, 100)">
                   <foreignObject x="-40" y="-40" width="80" height="80">
-                    </div>
-                      {renderLevelNode(featureBranch[1])}
-                </g>
-                  </foreignObject>
-                <g transform="translate(700, 300)">
-                -40" y="-40" width="80" height="80">
                     <div className="flex items-center justify-center w-full h-full">
+                      {renderLevelNode(featureBranch[1])}
+                    </div>
+                  </foreignObject>
+                </g>
+                
+                <g transform="translate(700, 300)">
                   <foreignObject x="-40" y="-40" width="80" height="80">
                     <div className="flex items-center justify-center w-full h-full">
                       {renderLevelNode(experimentalBranch[1])}
                     </div>
                   </foreignObject>
+                </g>
+                
                 <g transform="translate(850, 200)">
                   <foreignObject x="-40" y="-40" width="80" height="80">
                     <div className="flex items-center justify-center w-full h-full">
-                  <foreignObject x="-40" y="-40" width="80" height="80">
+                      {renderLevelNode(mainBranch[3])}
                     </div>
                   </foreignObject>
-                    </div>
+                  <text x="0" y="-60" textAnchor="middle" fill="var(--secondary)" fontSize="10" fontFamily="Press Start 2P">merge</text>
+                </g>
                 
                 <g transform="translate(950, 200)">
                   <foreignObject x="-40" y="-40" width="80" height="80">
@@ -320,27 +323,23 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
                     </div>
                   </foreignObject>
                 </g>
-                  </foreignObject>
+                
                 <g transform="translate(1050, 200)">
                   <foreignObject x="-40" y="-40" width="80" height="80">
-                <g transform="translate(1050, 200)">
+                    <div className="flex items-center justify-center w-full h-full">
                       {renderLevelNode(mainBranch[5])}
                     </div>
-                </g>
-                
                   </foreignObject>
-                  <text x="0" y="0" textAnchor="middle" fill="var(--secondary)" fontSize="10" fontFamily="Press Start 2P">merge</text>
-                
-                <g transform="translate(850, 100)">
-                  <text x="0" y="0" textAnchor="middle" fill="var(--secondary)" fontSize="10" fontFamily="Press Start 2P">merge</text>
-          </div>
+                </g>
               </svg>
+            </div>
+          </div>
           <div className="absolute top-4 right-4 flex flex-col gap-2">
             <Button
               size="icon"
               variant="secondary"
               className="pixel-shadow w-10 h-10"
-              size="icon"
+              onClick={handleZoomIn}
             >
               <MagnifyingGlassPlus size={20} weight="bold" />
             </Button>
