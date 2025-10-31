@@ -1,6 +1,6 @@
 # 🎮 GitQuest - Learn Git Through 8-Bit Adventure
 
-**🏆 Winner - Creativity Category, GitHub Universe 2025**
+**🏆 Winner - Creativity Category, GitHub Spark Challenge @GitHub Universe 2025** [Spark Challenge](https://github.com/ghlearn-universe/git-visualizer-instructions/discussions/1)
 
 GitQuest is an interactive 8-bit adventure game that teaches Git concepts through engaging gameplay. Battle code monsters, learn Git commands, and master version control while enjoying a retro gaming experience!
 
