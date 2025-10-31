@@ -200,6 +200,9 @@ export function LevelSelect({ completedLevels, onSelectLevel, onStartGame, onRes
           <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto px-4">
             ⚔️ Battle code-corrupting monsters with the power of Git commands! 🗺️ Journey through 8 epic levels—from taming the Chaos Beast with your first repository to mastering the ancient Git Database. 💪 Each enemy defeated unlocks new version control powers. ✨ No prior Git experience required—just a hero's courage and a willingness to learn! 🎮
           </p>
+          <p>
+            <a href="https://github.com/el-portero/git-quest-gh-learn">GitQuest Project Page</a>
+          </p>
           
           <div className="max-w-md mx-auto space-y-2 px-4">
             <div className="flex justify-between text-sm text-muted-foreground">
