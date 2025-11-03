@@ -72,3 +72,34 @@ npm run preview
 3. Battle enemies by typing Git commands
 4. Complete all levels to master Git fundamentals!
 
+## :question: Answers
+
+Level 1
+- `git init`
+
+Level 2
+- `git add readme.md`
+- `git add index.html`
+- `git add style.css`
+
+Level 3
+- `git commit -m "test"`
+
+Level 4
+- `git status`
+- `git log`
+
+Level 5
+- `git log --oneline`
+- `git diff`
+
+Level 6
+- `git merge feature`
+
+Level 7
+- `git checkout -b feature`
+
+Level 8
+- `git cat-file -t HEAD`
+- `git cat-file -p HEAD`
+- `git rev-list --objects --all`
